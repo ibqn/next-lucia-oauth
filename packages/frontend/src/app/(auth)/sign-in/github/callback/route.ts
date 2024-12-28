@@ -68,8 +68,5 @@ export async function GET(request: Request): Promise<Response> {
   //   const sessionToken = generateSessionToken()
   //   const session = await createSession(sessionToken, user.id)
   //   await setSessionTokenCookie(sessionToken, session.expiresAt)
-  return new Response(null, {
-    status: 302,
-    headers: { Location: '/' },
-  })
+  return new Response(null, { status: 302, headers: { Location: '/' } })
 }
