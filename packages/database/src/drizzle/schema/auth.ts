@@ -1,6 +1,6 @@
 import { sqliteTable, int, text, primaryKey, integer } from "drizzle-orm/sqlite-core"
 import { createdAtUpdatedAt } from "./utils"
-import { relations, type InferInsertModel } from "drizzle-orm"
+import { relations, type InferSelectModel } from "drizzle-orm"
 
 export const userTable = sqliteTable("user", {
   id: int("id").primaryKey({ autoIncrement: true }),
@@ -11,7 +11,7 @@ export const userTable = sqliteTable("user", {
   ...createdAtUpdatedAt,
 })
 
-export type User = InferInsertModel<typeof userTable>
+export type User = InferSelectModel<typeof userTable>
 
 export const sessionTable = sqliteTable("session", {
   id: int("id").primaryKey({ autoIncrement: true }),
@@ -23,6 +23,8 @@ export const sessionTable = sqliteTable("session", {
 
   ...createdAtUpdatedAt,
 })
+
+export type Session = InferSelectModel<typeof sessionTable>
 
 export const sessionRelations = relations(sessionTable, ({ one }) => ({
   user: one(userTable, {
