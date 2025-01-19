@@ -1,12 +1,7 @@
-// import {
-//   generateSessionToken,
-//   createSession,
-//   setSessionTokenCookie,
-// } from '@/lib/session'
 import { github } from '@/lib/oauth'
 import { cookies } from 'next/headers'
-
 import type { OAuth2Tokens } from 'arctic'
+import { createUser } from '@/action/create-user'
 
 export async function GET(request: Request): Promise<Response> {
   const url = new URL(request.url)
@@ -68,5 +63,14 @@ export async function GET(request: Request): Promise<Response> {
   //   const sessionToken = generateSessionToken()
   //   const session = await createSession(sessionToken, user.id)
   //   await setSessionTokenCookie(sessionToken, session.expiresAt)
+
+  const username = githubUser.login
+  const { email } = emailListResult.filter(
+    (emailItem: any) => emailItem.primary && emailItem.verified
+  )
+  const avatarUrl = githubUser.avatar_url
+
+  await createUser(username, email, avatarUrl)
+
   return new Response(null, { status: 302, headers: { Location: '/' } })
 }
