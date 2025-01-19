@@ -2,6 +2,9 @@ import { generateState, OAuth2Tokens } from "arctic"
 import { Hono } from "hono"
 import { github } from "../lib/oauth"
 import { getCookie, setCookie } from "hono/cookie"
+import { getUserById } from "database/src/queries/user"
+import type { SuccessResponse } from "../types"
+import type { User } from "database/src/drizzle/schema/auth"
 
 export const authRoute = new Hono()
 
@@ -55,4 +58,8 @@ authRoute
     console.log("email list", emailListResult)
 
     return c.redirect("http://localhost:3001/", 302)
+  })
+  .get("/user", async (c) => {
+    const user = await getUserById(1)
+    return c.json<SuccessResponse<User>>({ message: "User found", data: user, success: true })
   })

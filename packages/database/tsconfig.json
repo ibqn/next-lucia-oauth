@@ -6,8 +6,6 @@
     "strict": true,
     "verbatimModuleSyntax": true,
     "skipLibCheck": true,
-    "types": ["node"],
-
-    "baseUrl": "."
+    "types": ["node"]
   }
 }
