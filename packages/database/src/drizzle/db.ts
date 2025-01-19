@@ -12,8 +12,8 @@ const processEnv = envSchema.parse(process.env)
 const client = createClient({ url: processEnv.DATABASE_URL })
 export const db = drizzle(client, {
   schema: {
-    users: userTable,
-    sessions: sessionTable,
+    user: userTable,
+    session: sessionTable,
     sessionRelations,
   },
 })
