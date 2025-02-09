@@ -1,9 +1,9 @@
 import { eq } from "drizzle-orm"
 import { db } from "./drizzle/db"
-import { userTable, type User } from "./drizzle/schema/auth"
+import { userTable } from "./drizzle/schema/auth"
 
 const seed = async () => {
-  const users: User[] = [
+  const users = [
     {
       username: "alice",
       email: "elice@gmail.com",
