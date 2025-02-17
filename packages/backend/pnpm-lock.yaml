@@ -10,10 +10,10 @@ importers:
     dependencies:
       '@hono/node-server':
         specifier: ^1.13.8
-        version: 1.13.8(hono@4.7.0)
+        version: 1.13.8(hono@4.7.1)
       arctic:
-        specifier: ^3.2.4
-        version: 3.2.4
+        specifier: ^3.3.0
+        version: 3.3.0
       axios:
         specifier: ^1.7.9
         version: 1.7.9
@@ -21,15 +21,15 @@ importers:
         specifier: workspace:*
         version: link:../database
       hono:
-        specifier: ^4.7.0
-        version: 4.7.0
+        specifier: ^4.7.1
+        version: 4.7.1
       zod:
-        specifier: ^3.24.1
-        version: 3.24.1
+        specifier: ^3.24.2
+        version: 3.24.2
     devDependencies:
       '@types/node':
-        specifier: ^22.13.1
-        version: 22.13.1
+        specifier: ^22.13.4
+        version: 22.13.4
       tsx:
         specifier: ^4.7.1
         version: 4.19.2
@@ -204,11 +204,11 @@ packages:
   '@oslojs/jwt@0.2.0':
     resolution: {integrity: sha512-bLE7BtHrURedCn4Mco3ma9L4Y1GR2SMBuIvjWr7rmQ4/W/4Jy70TIAgZ+0nIlk0xHz1vNP8x8DCns45Sb2XRbg==}
 
-  '@types/node@22.13.1':
-    resolution: {integrity: sha512-jK8uzQlrvXqEU91UxiK5J7pKHyzgnI1Qnl0QDHIgVGuolJhRb9EEl28Cj9b3rGR8B2lhFCtvIm5os8lFnO/1Ew==}
+  '@types/node@22.13.4':
+    resolution: {integrity: sha512-ywP2X0DYtX3y08eFVx5fNIw7/uIv8hYUKgXoK8oayJlLnKcRfEYCxWMVE1XagUdVtCJlZT1AU4LXEABW+L1Peg==}
 
-  arctic@3.2.4:
-    resolution: {integrity: sha512-EGQAIZtl3Z/2GVGxp0pUnPbD15V4HrbknY+O6zSnLeTBT/cshL4mkNd/X+qFd1zFpW2lVO34w6CTx+3gjwb3lQ==}
+  arctic@3.3.0:
+    resolution: {integrity: sha512-kORD8k31tPnbxovMlaTQwknIswAKK2eqQjfyW/sWXTIIZxp7PaFxNogJBFc9ZYdQFL7CXQIhl3XuQI848UX+aw==}
 
   asynckit@0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
@@ -250,8 +250,8 @@ packages:
   get-tsconfig@4.8.1:
     resolution: {integrity: sha512-k9PN+cFBmaLWtVz29SkUoqU5O0slLuHJXt/2P+tMVFT+phsSGXGkp9t3rQIqdz0e+06EHNGs3oM6ZX1s2zHxRg==}
 
-  hono@4.7.0:
-    resolution: {integrity: sha512-hV97aIR4WYbG30k234sD9B3VNr1ZWdQRmrVF76LKFlmI7O9Yo70mG9+mFwyQ6Sjrz4wH71GfnBxv6CPjcx3QNw==}
+  hono@4.7.1:
+    resolution: {integrity: sha512-V3eWoPkBxoNgFCkSc5Y5rpLF6YoQQx1pkYO4qrF6YfOw8RZbujUNlJLZCxh0z9gZct70+je2Ih7Zrdpv21hP9w==}
     engines: {node: '>=16.9.0'}
 
   mime-db@1.52.0:
@@ -276,8 +276,8 @@ packages:
   undici-types@6.20.0:
     resolution: {integrity: sha512-Ny6QZ2Nju20vw1SRHe3d9jVu6gJ+4e3+MMpqu7pqE5HT6WsTSlce++GQmK5UXS8mzV8DSYHrQH+Xrf2jVcuKNg==}
 
-  zod@3.24.1:
-    resolution: {integrity: sha512-muH7gBL9sI1nciMZV67X5fTKKBLtwpZ5VBp1vsOQzj1MhrBZ4wlVCm3gedKZWLp0Oyel8sIGfeiz54Su+OVT+A==}
+  zod@3.24.2:
+    resolution: {integrity: sha512-lY7CDW43ECgW9u1TcT3IoXHflywfVqDYze4waEz812jR/bZ8FHDsl7pFQoSZTz5N+2NqRXs8GBwnAwo3ZNxqhQ==}
 
 snapshots:
 
@@ -353,9 +353,9 @@ snapshots:
   '@esbuild/win32-x64@0.23.1':
     optional: true
 
-  '@hono/node-server@1.13.8(hono@4.7.0)':
+  '@hono/node-server@1.13.8(hono@4.7.1)':
     dependencies:
-      hono: 4.7.0
+      hono: 4.7.1
 
   '@oslojs/asn1@1.0.0':
     dependencies:
@@ -376,11 +376,11 @@ snapshots:
     dependencies:
       '@oslojs/encoding': 0.4.1
 
-  '@types/node@22.13.1':
+  '@types/node@22.13.4':
     dependencies:
       undici-types: 6.20.0
 
-  arctic@3.2.4:
+  arctic@3.3.0:
     dependencies:
       '@oslojs/crypto': 1.0.1
       '@oslojs/encoding': 1.1.0
@@ -444,7 +444,7 @@ snapshots:
     dependencies:
       resolve-pkg-maps: 1.0.0
 
-  hono@4.7.0: {}
+  hono@4.7.1: {}
 
   mime-db@1.52.0: {}
 
@@ -465,4 +465,4 @@ snapshots:
 
   undici-types@6.20.0: {}
 
-  zod@3.24.1: {}
+  zod@3.24.2: {}
