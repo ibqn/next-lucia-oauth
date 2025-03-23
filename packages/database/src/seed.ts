@@ -14,6 +14,8 @@ const seed = async () => {
     },
   ]
 
+  const start = Date.now()
+
   const seededUsers = await db.insert(userTable).values(users).returning().onConflictDoNothing()
 
   console.log(seededUsers)
@@ -24,8 +26,6 @@ const seed = async () => {
     .where(eq(userTable.id, 2))
     .returning({ id: userTable.id })
 
-  const start = Date.now()
-  await new Promise((resolve) => setTimeout(resolve, 2000))
   const end = Date.now()
   console.log(`Time taken" ${(end - start) / 1000}s`)
 }
