@@ -24,7 +24,9 @@ export const sessionTable = sqliteTable("session", {
   ...createdAtUpdatedAt,
 })
 
-export type Session = InferSelectModel<typeof sessionTable>
+export type Session = InferSelectModel<typeof sessionTable> & {
+  user?: User | null
+}
 
 export const sessionRelations = relations(sessionTable, ({ one }) => ({
   user: one(userTable, {

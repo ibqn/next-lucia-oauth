@@ -1,6 +1,16 @@
-import Link from 'next/link'
+import { validateRequest } from "@/auth"
+import Link from "next/link"
+import { redirect } from "next/navigation"
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default async function Layout({ children }: { children: React.ReactNode }) {
+  const validationResult = await validateRequest()
+
+  console.log("validate", validationResult)
+
+  if (!validationResult.user) {
+    redirect("/sign-in")
+  }
+
   return (
     <div>
       <nav>

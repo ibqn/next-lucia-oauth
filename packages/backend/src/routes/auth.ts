@@ -6,7 +6,15 @@ import { createUser, getUserById, getUserByUsername } from "database/src/queries
 import type { SuccessResponse } from "../types"
 import type { User } from "database/src/drizzle/schema/auth"
 import { createAccount } from "database/src/queries/account"
-import { createSession, generateSessionToken } from "database/src/lucia"
+import {
+  createSession,
+  generateSessionToken,
+  validateSessionToken,
+  type SessionValidationResult,
+} from "database/src/lucia"
+import type { Session } from "database/src/drizzle/schema/auth"
+import { getSessionCookieOptions, sessionCookieName } from "database/src/cookie"
+import { get } from "http"
 
 export const authRoute = new Hono()
 
@@ -74,17 +82,27 @@ authRoute
     const token = generateSessionToken()
     const session = await createSession(token, user.id)
 
-    setCookie(c, "lucia_session", token, {
-      path: "/",
-      secure: process.env.NODE_ENV === "production",
-      httpOnly: true,
-      expires: session.expiresAt,
-      sameSite: "lax",
-    })
+    setCookie(c, sessionCookieName, token, getSessionCookieOptions(session.expiresAt))
 
     return c.redirect("http://localhost:3000/", 302)
   })
   .get("/user", async (c) => {
     const user = await getUserById(1)
     return c.json<SuccessResponse<User>>({ message: "User found", data: user, success: true })
+  })
+  .get("/validate", async (c) => {
+    const token = getCookie(c, sessionCookieName) ?? ""
+    const sessionResult = await validateSessionToken(token)
+
+    console.log("token", token)
+    console.log("sessionResult", sessionResult)
+
+    const session = sessionResult.session as Session
+    const user = sessionResult.user as User
+
+    return c.json<SuccessResponse<SessionValidationResult>>({
+      success: true,
+      message: "Session validated",
+      data: { user, session },
+    })
   })
