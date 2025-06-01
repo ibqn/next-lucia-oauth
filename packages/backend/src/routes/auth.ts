@@ -14,7 +14,6 @@ import {
 } from "database/src/lucia"
 import type { Session } from "database/src/drizzle/schema/auth"
 import { getSessionCookieOptions, sessionCookieName } from "database/src/cookie"
-import { get } from "http"
 
 export const authRoute = new Hono()
 
