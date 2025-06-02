@@ -1,10 +1,15 @@
 import { validateRequest } from "@/auth"
 import Link from "next/link"
 import { redirect } from "next/navigation"
+import type { ReactNode } from "react"
 
 export const dynamic = "force-dynamic"
 
-export default async function Layout({ children }: { children: React.ReactNode }) {
+type LayoutProps = Readonly<{
+  children: ReactNode
+}>
+
+export default async function Layout({ children }: LayoutProps) {
   const validationResult = await validateRequest()
 
   console.log("validate", validationResult)
