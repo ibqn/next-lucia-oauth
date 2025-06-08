@@ -16,12 +16,12 @@
     "@oslojs/crypto": "^1.0.1",
     "@oslojs/encoding": "^1.1.0",
     "argon2": "^0.43.0",
-    "drizzle-orm": "^0.44.1",
-    "drizzle-zod": "^0.7.0",
-    "zod": "^3.25.46"
+    "drizzle-orm": "^0.44.2",
+    "drizzle-zod": "^0.8.2",
+    "zod": "^3.25.56"
   },
   "devDependencies": {
-    "@types/node": "^22.15.29",
+    "@types/node": "^22.15.30",
     "drizzle-kit": "^0.31.1",
     "tsx": "^4.19.4",
     "typescript": "^5.8.3"
