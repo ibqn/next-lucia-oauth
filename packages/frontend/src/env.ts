@@ -1,12 +1,12 @@
 import { createEnv } from "@t3-oss/env-nextjs"
-import { z } from "zod"
+import { z } from "zod/v4"
 
 export const env = createEnv({
   client: {
-    NEXT_PUBLIC_API_URL: z.string().url(),
+    NEXT_PUBLIC_API_URL: z.url(),
   },
   server: {
-    API_URL: z.string().url(),
+    API_URL: z.url(),
   },
 
   runtimeEnv: {
