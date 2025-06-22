@@ -6,7 +6,7 @@ import { env } from "@/env"
 
 export default function SignInPage() {
   return (
-    <Card className="max-w-sm">
+    <Card className="max-w-md w-full">
       <CardHeader className="text-center">
         <CardTitle className="text-xl">Welcome back</CardTitle>
         <CardDescription>Login with your GitHub or Google account</CardDescription>
@@ -21,9 +21,11 @@ export default function SignInPage() {
                   Login with GitHub
                 </a>
               </Button>
-              <Button variant="outline" className="w-full">
-                <GoogleIcon />
-                Login with Google
+              <Button asChild variant="outline" className="w-full">
+                <a href={`${env.API_URL}/auth/sign-in/google`}>
+                  <GoogleIcon />
+                  Login with Google
+                </a>
               </Button>
             </div>
           </div>

@@ -1,8 +1,8 @@
-import { generateState, OAuth2Tokens } from "arctic"
+import { decodeIdToken, generateCodeVerifier, generateState, OAuth2Tokens } from "arctic"
 import { Hono } from "hono"
-import { github } from "../lib/oauth"
+import { github, google } from "../lib/oauth"
 import { getCookie, setCookie } from "hono/cookie"
-import { createUser, getUserById, getUserByUsername } from "database/src/queries/user"
+import { createUser, getUserById, getUserByEmail } from "database/src/queries/user"
 import type { SuccessResponse } from "../types"
 import type { User } from "database/src/drizzle/schema/auth"
 import { createAccount } from "database/src/queries/account"
@@ -107,7 +107,7 @@ authRoute
     const avatarUrl = githubUser.avatar_url
 
     await createUser(username, email, avatarUrl)
-    const user = await getUserByUsername(username)
+    const user = await getUserByEmail(email)
 
     const providerAccountId = githubUser.id.toString()
 
@@ -139,4 +139,88 @@ authRoute
       message: "Session validated",
       data: { user, session },
     })
+  })
+  .get("/sign-in/google", async (c) => {
+    const state = generateState()
+    const codeVerifier = generateCodeVerifier()
+    const scopes = ["openid", "profile", "email"]
+
+    const url = google.createAuthorizationURL(state, codeVerifier, scopes)
+
+    setCookie(c, "google_oauth_state", state, {
+      path: "/",
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: true,
+      maxAge: 60 * 10,
+      sameSite: "lax",
+    })
+
+    setCookie(c, "google_oauth_code_verifier", codeVerifier, {
+      path: "/",
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: true,
+      maxAge: 60 * 10,
+      sameSite: "lax",
+    })
+
+    return c.redirect(url.toString(), 302)
+  })
+  .get("/sign-in/google/callback", async (c) => {
+    const { code, state } = c.req.query()
+
+    console.log("code", code, "state", state)
+    const storedState = getCookie(c, "google_oauth_state") ?? null
+    const storedCodeVerifier = getCookie(c, "google_oauth_code_verifier") ?? null
+    if (code === null || state === null || storedState === null || storedCodeVerifier === null) {
+      return c.body(null, { status: 400 })
+    }
+    if (state !== storedState) {
+      return c.body(null, { status: 400 })
+    }
+
+    let tokens: OAuth2Tokens
+    try {
+      tokens = await google.validateAuthorizationCode(code, storedCodeVerifier)
+    } catch (error) {
+      console.error(error)
+      // Invalid code or client credentials
+      return c.body(null, { status: 400 })
+    }
+
+    const claims = decodeIdToken(tokens.idToken())
+
+    const googleUserSchema = z.object({
+      sub: z.string(),
+      name: z.string(),
+      picture: z.string(),
+      email: z.email(),
+    })
+
+    const googleUserSchemaResult = googleUserSchema.safeParse(claims)
+    if (!googleUserSchemaResult.success) {
+      console.error("Invalid Google user data", googleUserSchemaResult.error)
+      return c.body(null, { status: 400 })
+    }
+    const googleUser = googleUserSchemaResult.data
+
+    console.log("google user", googleUser)
+
+    const googleUserId = googleUser.sub
+    const email = googleUser.email
+    const username = googleUser.name
+    const avatarUrl = googleUser.picture
+
+    await createUser(username, email, avatarUrl)
+    const user = await getUserByEmail(email)
+
+    const providerAccountId = googleUserId
+
+    await createAccount(user.id, "google", providerAccountId)
+
+    const token = generateSessionToken()
+    const session = await createSession(token, user.id)
+
+    setCookie(c, sessionCookieName, token, getSessionCookieOptions(session.expiresAt))
+
+    return c.redirect("http://localhost:3000/", 302)
   })
