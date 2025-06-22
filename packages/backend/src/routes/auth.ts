@@ -14,6 +14,8 @@ import {
 } from "database/src/lucia"
 import type { Session } from "database/src/drizzle/schema/auth"
 import { getSessionCookieOptions, sessionCookieName } from "database/src/cookie"
+import axios from "axios"
+import { z } from "zod/v4"
 
 export const authRoute = new Hono()
 
@@ -54,21 +56,54 @@ authRoute
       // Invalid code or client credentials
       return c.body(null, { status: 400 })
     }
-    const githubUserResponse = await fetch("https://api.github.com/user", {
-      headers: { Authorization: `Bearer ${tokens.accessToken()}` },
+
+    const headers = { headers: { Authorization: `Bearer ${tokens.accessToken()}` } }
+    const githubUserResponse = await axios.get("https://api.github.com/user", headers)
+    const githubUserData = githubUserResponse.data
+
+    const githubUserSchema = z.object({
+      id: z.number(),
+      login: z.string(),
+      avatar_url: z.string(),
     })
-    const githubUser = await githubUserResponse.json()
+
+    const githubUserSchemaResult = githubUserSchema.safeParse(githubUserData)
+    if (!githubUserSchemaResult.success) {
+      console.error("Invalid GitHub user data", githubUserSchemaResult.error)
+      return c.body(null, { status: 400 })
+    }
+
+    const githubUser = githubUserSchemaResult.data
 
     console.log("github user", githubUser)
 
-    const emailListRequest = new Request("https://api.github.com/user/emails")
-    emailListRequest.headers.set("Authorization", `Bearer ${tokens.accessToken()}`)
-    const emailListResponse = await fetch(emailListRequest)
-    const emailListResult = await emailListResponse.json()
-    console.log("email list", emailListResult)
+    const emailListResponse = await axios.get("https://api.github.com/user/emails", headers)
+    const emailListData = emailListResponse.data
 
+    const emailListSchema = z.array(
+      z.object({
+        email: z.string(),
+        primary: z.boolean(),
+        verified: z.boolean(),
+      })
+    )
+
+    const emailListSchemaResult = emailListSchema.safeParse(emailListData)
+    if (!emailListSchemaResult.success) {
+      console.error("Invalid email list data", emailListSchemaResult.error)
+      return c.body(null, { status: 400 })
+    }
+    const emailList = emailListSchemaResult.data
+
+    console.log("email list", emailList)
+
+    const emailObject = emailList.find((emailItem) => emailItem.primary && emailItem.verified)
+    if (!emailObject) {
+      console.error("No primary verified email found")
+      return c.body(null, { status: 400 })
+    }
+    const email = emailObject.email
     const username = githubUser.login
-    const { email } = emailListResult.find((emailItem: any) => emailItem.primary && emailItem.verified)
     const avatarUrl = githubUser.avatar_url
 
     await createUser(username, email, avatarUrl)
