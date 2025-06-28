@@ -21,8 +21,8 @@
     "zod": "^3.25.67"
   },
   "devDependencies": {
-    "@types/node": "^24.0.4",
-    "drizzle-kit": "^0.31.2",
+    "@types/node": "^24.0.7",
+    "drizzle-kit": "^0.31.4",
     "tsx": "^4.20.3",
     "typescript": "^5.8.3"
   }
