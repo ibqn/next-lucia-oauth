@@ -15,7 +15,7 @@ import {
 import type { Session } from "database/src/drizzle/schema/auth"
 import { getSessionCookieOptions, sessionCookieName } from "database/src/cookie"
 import axios from "axios"
-import { z } from "zod/v4"
+import { z } from "zod"
 
 export const authRoute = new Hono()
 
