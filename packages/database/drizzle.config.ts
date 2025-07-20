@@ -1,5 +1,5 @@
 import type { Config } from "drizzle-kit"
-import { processEnv } from "./src/env"
+import { env } from "./src/env"
 
 export default {
   schema: "src/drizzle/schema",
@@ -9,6 +9,6 @@ export default {
   verbose: true,
   strict: true,
   dbCredentials: {
-    url: processEnv.DATABASE_URL,
+    url: env.DATABASE_URL,
   },
 } satisfies Config
